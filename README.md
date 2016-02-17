@@ -3,7 +3,7 @@
 #### It is based on [GC Internal LB](https://cloud.google.com/solutions/internal-load-balancing-haproxy)
 
 Internal LoadBalancer script allows to bootstrap HAProxy based VM, which watches 
-GKE Nodes each two minutes and updates HAProxy config file if node/s IP got changed.
+GKE Nodes each two minutes and updates HAProxy config file if node/s IP got changed and then restarts the HAProxy.
 
 How to use it:
 ---
