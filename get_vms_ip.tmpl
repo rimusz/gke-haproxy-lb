@@ -12,7 +12,7 @@ gcloud=/usr/local/bin/gcloud
 #
 sudo cp -f /opt/haproxy/haproxy.cfg.template /opt/haproxy/haproxy.cfg
 
-for machine in $($gcloud compute instances list --project=$PROJECT | grep -v grep | grep $SERVERS | awk {'print $4'}); do
+for machine in $($gcloud compute instances list --project=$PROJECT | grep -v grep | grep $SERVERS | grep -v 'int-lb' | awk {'print $4'}); do
     sudo echo "    server node-$machine $machine:80 check" >> /opt/haproxy/haproxy.cfg
 done
 
