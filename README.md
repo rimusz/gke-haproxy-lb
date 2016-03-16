@@ -1,9 +1,8 @@
-# Internal LoadBalancer for GKE clusters
+# Internal Load-Balancer for GKE cluster
 
 #### It is based on [GC Internal LB](https://cloud.google.com/solutions/internal-load-balancing-haproxy)
 
-Internal LoadBalancer script allows to bootstrap HAProxy based VM, which watches 
-GKE Nodes each two minutes and updates HAProxy config file if node/s IP got changed and then restarts the HAProxy.
+GKE Internal Load-Balancer is a tool that bootstraps a HAProxy VM, following the recommended [Google setup](https://cloud.google.com/solutions/internal-load-balancing-haproxy). However, this HAProxy VM now also watches your GKE cluster and updates the HAProxy configuration file and restarts HAProxy when it detects a new IP address.
 
 How to use it:
 ---
@@ -13,7 +12,7 @@ How to use it:
 ```
 $ git clone https://github.com/rimusz/gke-internal-lb
 ```
-- Update script's `create_internal_lb.sh` the part shown below with your GC project and zone (and other settings if you want to):
+- Update `settings` file shown below with your GCE project and zone, and any other settings you want to change:
 
 ```
 ##############################################################################
@@ -34,27 +33,34 @@ STATIC_IP=10.200.252.10
 MACHINE_TYPE=g1-small
 ##############################################################################
 ```
-- Then run:
+- Now run the script:
 
 ```
 $ ./create_internal_lb.sh
 ```
 
-What `create_internal_lb.sh` does:
+What it does:
 ---
+Running this script performs the following actions:
 
-- Check for existing setup and deletes it all dependencies
-- Creates a temporal VM, set's it up
-- Deletes the temporal VM keeping it's boot disk
-- Creates the custom image from the boot disk
-- Creates HAProxy instance template based on the custom image
-- Creates a managed instance group with the 1 VM which has a static IP
+1. Checks for an existing setup and deletes it, along with all dependencies
+2. Creates a temporary VM, and sets it up
+3. Deletes the temporary VM keeping its boot disk
+4. Creates the custom image from the boot disk
+5. Creates a HAProxy instance template based on the custom image
+6. Creates a managed instance group with the new VM
 
-So what do you get then:
----
-- Internal Loadbalancer VM forwards received `http` trafic to all GKE cluster Nodes port 80 (the port can be changed in `get_vms_ip.tmpl`)
-- The Internal LoadBalance VM is watched by the Instance Group Manager, if the VM stops it gets restarted then
-- VM's HAProxy service is set to always restart, systemd restarts the service if it stops.
-- Script `/opt/bin/get_vms_ip` gets run by `cron` every two minutes (it can be changed), checks for GKE Nodes IP changes, updates HAProxy config file if node/s IP got changed and then restarts HAProxy.
 
+After that, you'll have an internal load balancer VM running HAProxy that forwards all received HTTP traffic to all GKE cluster nodes on port 80. You can configure the port number by editing the `get_vms_ip.tmpl` file.
+
+This load balancer VM is watched by the Instance Group Manager. If the VM stops it gets restarted. Similarly, the HAProxy service running on the load balancer VM is set to always be running. So systemd restarts the service if it stops.
+
+And here's the best bit: `/opt/bin/get_vms_ip` gets run by cron every two minutes. This script checks for cluster IP changes. If it detects any, it updates HAProxy configuration file as needed, and restarts HAProxy.
+
+You can configure the cron frequency by editing the `create_internal_lb.sh` file.
+
+* Everytime time you run `create_internal_lb.sh` it checks for the existing HAProxy VM and if found it get's deleted and recreated again.
+
+
+#####This is an open source tool. If you'd like to make changes, or request changes, please open an issue or a pull request! Thank you!
 
