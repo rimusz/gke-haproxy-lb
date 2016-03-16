@@ -1,22 +1,21 @@
 #!/bin/bash
 
-##############################################################################
 # GC settings
-# your project
-PROJECT=_YOUR_PROJECT_
-# your GKE cluster zone or which ever zone you want to put the internal LB VM
-ZONE=_YOUR_ZONE_
+# project
+PROJECT=$(cat settings | grep PROJECT= | head -1 | cut -f2 -d"=")
+
+# zone
+ZONE=$(cat settings | grep ZONE= | head -1 | cut -f2 -d"=")
 #
 
-# GKE cluster VM name without all those e.g -364478-node-sa5c
-SERVERS=gke-cluster-1
+# GKE cluster VM name
+SERVERS=$(cat settings | grep SERVERS= | head -1 | cut -f2 -d"=")
 
 # static IP for the internal LB VM
-STATIC_IP=10.200.252.10
+STATIC_IP=$(cat settings | grep STATIC_IP= | head -1 | cut -f2 -d"=")
 
 # VM type
-MACHINE_TYPE=g1-small
-##############################################################################
+MACHINE_TYPE=$(cat settings | grep MACHINE_TYPE= | head -1 | cut -f2 -d"=")
 
 # VMs name
 BASE_VM_NAME=$SERVERS-lb-base
