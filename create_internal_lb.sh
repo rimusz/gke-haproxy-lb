@@ -1,23 +1,9 @@
 #!/bin/bash
 
-# GC settings
-# project
-PROJECT=$(cat settings | grep PROJECT= | head -1 | cut -f2 -d"=")
+# import values from file
+source settings
 
-# zone
-ZONE=$(cat settings | grep ZONE= | head -1 | cut -f2 -d"=")
-#
-
-# GKE cluster VM name
-SERVERS=$(cat settings | grep SERVERS= | head -1 | cut -f2 -d"=")
-
-# static IP for the internal LB VM
-STATIC_IP=$(cat settings | grep STATIC_IP= | head -1 | cut -f2 -d"=")
-
-# VM type
-MACHINE_TYPE=$(cat settings | grep MACHINE_TYPE= | head -1 | cut -f2 -d"=")
-
-# VMs name
+# set VM names
 BASE_VM_NAME=$SERVERS-lb-base
 VM_NAME=$SERVERS-int-lb
 
