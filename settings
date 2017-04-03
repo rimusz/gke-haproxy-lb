@@ -15,4 +15,4 @@ SERVERS=gke-cluster-1
 STATIC_IP=10.200.252.10
 
 # VM type
-MACHINE_TYPE=g1-small
+MACHINE_TYPE=f1-micro
