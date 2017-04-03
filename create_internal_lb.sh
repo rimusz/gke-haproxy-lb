@@ -48,7 +48,7 @@ echo " "
 ### base VM
 # create an instance which disk will be used as a base image later one
 echo "Creating base VM $BASE_VM_NAME ..."
-gcloud compute instances create $BASE_VM_NAME --image debian-8 \
+gcloud compute instances create $BASE_VM_NAME --image-family=debian-8 --image-project=debian-cloud \
  --scopes compute-rw --machine-type=$MACHINE_TYPE --can-ip-forward
 echo " "
 
