@@ -1,8 +1,8 @@
-# Internal Load-Balancer for GKE cluster
+# External/Internal Load-Balancer for GKE cluster
 
 #### It is based on [GC Internal LB](https://cloud.google.com/solutions/internal-load-balancing-haproxy)
 
-GKE Internal Load-Balancer is a tool that bootstraps a HAProxy VM, following the recommended [Google setup](https://cloud.google.com/solutions/internal-load-balancing-haproxy). However, this HAProxy VM now also watches your GKE cluster and updates the HAProxy configuration file and restarts HAProxy when it detects a new IP address.
+GKE External/Internal Load-Balancer is a tool that bootstraps a HAProxy VM, following the recommended [Google setup](https://cloud.google.com/solutions/internal-load-balancing-haproxy). However, this HAProxy VM now also watches your GKE cluster and updates the HAProxy configuration file and restarts HAProxy when it detects a new IP address. It can be used as intenal/external LB ans save some bucks instead of using GCE LoadBalancers.
 
 How to use it:
 ---
@@ -10,7 +10,7 @@ How to use it:
 - Run the command below:
 
 ```
-$ git clone https://github.com/rimusz/gke-internal-lb
+$ git clone https://github.com/rimusz/gke-haproxy-lb
 ```
 - Update `settings` file shown below with your GCE project and zone, and any other settings you want to change:
 
@@ -30,13 +30,13 @@ SERVERS=gke-cluster-1
 STATIC_IP=10.200.252.10
 
 # VM type
-MACHINE_TYPE=g1-small
+MACHINE_TYPE=f1-micro
 ##############################################################################
 ```
 - Now run the script:
 
 ```
-$ ./create_internal_lb.sh
+$ ./create_haproxy_lb.sh
 ```
 
 What it does:
@@ -57,9 +57,9 @@ This load balancer VM is watched by the Instance Group Manager. If the VM stops 
 
 And here's the best bit: `/opt/bin/get_vms_ip` gets run by cron every two minutes. This script checks for cluster IP changes. If it detects any, it updates HAProxy configuration file as needed, and restarts HAProxy.
 
-You can configure the cron frequency by editing the `create_internal_lb.sh` file.
+You can configure the cron frequency by editing the `create_haproxy_lb.sh` file.
 
-* Everytime time you run `create_internal_lb.sh` it checks for the existing HAProxy VM and if found it get's deleted and recreated again.
+* Everytime time you run `create_haproxy_lb.sh` it checks for the existing HAProxy VM and if found it get's deleted and recreated again.
 
 
 #####This is an open source tool. If you'd like to make changes, or request changes, please open an issue or a pull request! Thank you!
