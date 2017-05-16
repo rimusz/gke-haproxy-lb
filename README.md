@@ -62,5 +62,5 @@ You can configure the cron frequency by editing the `create_haproxy_lb.sh` file.
 * Everytime time you run `create_haproxy_lb.sh` it checks for the existing HAProxy VM and if found it get's deleted and recreated again.
 
 
-#####This is an open source tool. If you'd like to make changes, or request changes, please open an issue or a pull request! Thank you!
+##### This is an open source tool. If you'd like to make changes, or request changes, please open an issue or a pull request! Thank you!
 
