@@ -1,0 +1,22 @@
+#!/bin/bash
+
+APP="guestbook"
+
+source /root/.bash_profile
+
+cp -f /etc/haproxy/haproxy.cfg.template /etc/haproxy/haproxy.cfg.new
+
+PORT=`kubectl describe service -l app=$APP | grep NodePort: | awk {'print $3'} | sed -e 's/\/.*//'`
+
+for i in `kubectl describe pod -l app=$APP | grep Node: | sed -e 's/.*\///g'`
+do
+    echo "  server server-$i $i:$PORT check" >> /etc/haproxy/haproxy.cfg.new
+done
+
+diff /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.new
+
+if [[ $? -ne 0 ]]
+then
+    cp /etc/haproxy/haproxy.cfg.new /etc/haproxy/haproxy.cfg
+    /usr/sbin/service haproxy restart
+fi

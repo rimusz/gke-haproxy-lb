@@ -1,0 +1,49 @@
+global
+    log         127.0.0.1 local2
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy/haproxy.pid
+    maxconn     512000
+    user        haproxy
+    group       haproxy
+    daemon
+    tune.bufsize 16384
+    tune.maxrewrite 1024
+    tune.ssl.default-dh-param 2048
+    spread-checks 4
+    nbproc 3
+    cpu-map all 1-3
+
+defaults
+    mode                    http
+    log                     127.0.0.1 local2 notice
+    option                  dontlognull
+    option http-server-close
+    option forwardfor       except 127.0.0.0/8 if-none
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 512000
+    option tcp-smart-accept
+    option tcp-smart-connect
+    compression algo gzip
+    compression type text/html text/javascript text/xml text/plain
+
+listen stats
+  bind *:8080
+  mode http
+  stats enable
+  stats hide-version
+  stats realm Haproxy\ Statistics
+  stats uri /
+  stats auth admin:changeme
+
+listen gke-80
+  bind *:80
+  mode tcp
+  balance roundrobin
