@@ -1,24 +1,9 @@
 #!/bin/bash
 
-##############################################################################
-# GC settings
-# your project
-PROJECT=_YOUR_PROJECT_
-# your GKE cluster zone or which ever zone you want to put the internal LB VM
-ZONE=_YOUR_ZONE_
-#
+# import values from file
+source settings
 
-# GKE cluster VM name without all those e.g -364478-node-sa5c
-SERVERS=gke-cluster-1
-
-# static IP for the internal LB VM
-STATIC_IP=10.200.252.10
-
-# VM type
-MACHINE_TYPE=g1-small
-##############################################################################
-
-# VMs name
+# set VM names
 BASE_VM_NAME=$SERVERS-lb-base
 VM_NAME=$SERVERS-int-lb
 
@@ -63,7 +48,7 @@ echo " "
 ### base VM
 # create an instance which disk will be used as a base image later one
 echo "Creating base VM $BASE_VM_NAME ..."
-gcloud compute instances create $BASE_VM_NAME --image debian-8 \
+gcloud compute instances create $BASE_VM_NAME --image-family=debian-8 --image-project=debian-cloud \
  --scopes compute-rw --machine-type=$MACHINE_TYPE --can-ip-forward
 echo " "
 
