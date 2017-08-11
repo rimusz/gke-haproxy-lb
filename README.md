@@ -2,7 +2,7 @@
 
 #### It is based on [GC Internal LB](https://cloud.google.com/solutions/internal-load-balancing-haproxy)
 
-GKE External/Internal Load-Balancer is a tool that bootstraps a HAProxy VM, following the recommended [Google setup](https://cloud.google.com/solutions/internal-load-balancing-haproxy). However, this HAProxy VM now also watches your GKE cluster and updates the HAProxy configuration file and restarts HAProxy when it detects a new IP address. It can be used as intenal/external LB ans save some bucks instead of using GCE LoadBalancers.
+GKE External/Internal Load-Balancer is a tool that bootstraps a HAProxy VM, following the recommended [Google setup](https://cloud.google.com/solutions/internal-load-balancing-haproxy). However, this HAProxy VM now also watches your GKE cluster and updates the HAProxy configuration file and restarts HAProxy when it detects a new IP address. It can be used as intenal/external LB and save some bucks instead of using GCE LoadBalancers.
 
 How to use it:
 ---
